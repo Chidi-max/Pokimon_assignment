@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokimon world</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <h1>Pokédex</h1>
+    <p class="subtitle">Simply DEbest </p>
+    <input
+      type="search"
+      id="search"
+      placeholder="Search Pokémon by name..."
+      aria-label="Search Pokémon by name"
+      autocomplete="off"
+    >
+  </header>
+
+  <main>
+    <p id="status" class="status" aria-live="polite"></p>
+    <section id="grid" class="grid"></section>
+  </main>
+
+  <nav class="pager">
+    <button id="prev" class="pager-btn">Previous</button>
+    <span id="page-info">Page 1</span>
+    <button id="next" class="pager-btn">Next</button>
+  </nav>
+
+  <script src="script.js"></script>
+</body>
+</html>
