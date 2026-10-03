@@ -5,30 +5,90 @@
 }
 
 :root {
-  --bg: #1b1d2a;
-  --card: #ffffff;
-  --text: #23263a;
+  --bg-from: #1b1d2a;
+  --bg-to: #2d2f4a;
+  --page-text: #ffffff;
+  --card: #2a2d45;
+  --card-mix: #2a2d45;
+  --text: #f1f2f8;
+  --title: #ffcb05;
+  --title-shadow: #3b4cca;
+  --input-bg: #ffffff;
+  --input-text: #23263a;
   --accent: #ef5350;
+}
+
+[data-theme="light"] {
+  --bg-from: #eef2ff;
+  --bg-to: #fdf6e3;
+  --page-text: #23263a;
+  --card: #ffffff;
+  --card-mix: #ffffff;
+  --text: #23263a;
+  --title: #3b4cca;
+  --title-shadow: #ffcb05;
+  --input-bg: #ffffff;
+  --input-text: #23263a;
 }
 
 body {
   font-family: "Segoe UI", system-ui, sans-serif;
-  background: linear-gradient(160deg, #1b1d2a, #2d2f4a);
-  color: #fff;
+  background: linear-gradient(160deg, var(--bg-from), var(--bg-to));
+  color: var(--page-text);
+  transition: background 0.3s, color 0.3s;
   min-height: 100vh;
   padding: 0 16px 40px;
 }
 
 .header {
+  position: relative;
   text-align: center;
   padding: 32px 0 20px;
+}
+
+.theme-toggle {
+  position: absolute;
+  top: 16px;
+  right: 0;
+  width: 56px;
+  height: 30px;
+  background: #000;
+  border: 2px solid #888;
+  border-radius: 999px;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.theme-toggle .knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+[data-theme="light"] .theme-toggle {
+  border-color: #000;
+}
+
+[data-theme="light"] .theme-toggle .knob {
+  transform: translateX(26px);
+}
+
+.theme-toggle:focus-visible {
+  outline: 3px solid #ffcb05;
+  outline-offset: 2px;
 }
 
 .header h1 {
   font-size: 2.6rem;
   letter-spacing: 2px;
-  color: #ffcb05;
-  text-shadow: 3px 3px 0 #3b4cca;
+  color: var(--title);
+  text-shadow: 3px 3px 0 var(--title-shadow);
 }
 
 .subtitle {
@@ -41,6 +101,8 @@ body {
   max-width: 420px;
   padding: 12px 18px;
   border: none;
+  background: var(--input-bg);
+  color: var(--input-text);
   border-radius: 999px;
   font-size: 1rem;
   outline: none;
@@ -74,7 +136,7 @@ body {
   text-align: center;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
   border-top: 8px solid var(--type-color, #aaa);
-  background-image: linear-gradient(180deg, color-mix(in srgb, var(--type-color, #aaa) 22%, white), #fff 60%);
+  background-image: linear-gradient(180deg, color-mix(in srgb, var(--type-color, #aaa) 22%, var(--card-mix)), var(--card) 60%);
   transition: transform 0.2s, box-shadow 0.2s;
   animation: pop 0.35s ease both;
 }

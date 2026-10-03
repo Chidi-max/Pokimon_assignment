@@ -15,6 +15,27 @@ const searchInput = document.getElementById("search");
 const prevBtn = document.getElementById("prev");
 const nextBtn = document.getElementById("next");
 const pageInfo = document.getElementById("page-info");
+const themeToggle = document.getElementById("theme-toggle");
+
+// Theme: dark by default, remember the choice
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  themeToggle.setAttribute("aria-checked", theme === "dark");
+  try {
+    localStorage.setItem("theme", theme);
+  } catch (e) {}
+}
+
+let savedTheme = "dark";
+try {
+  savedTheme = localStorage.getItem("theme") || "dark";
+} catch (e) {}
+applyTheme(savedTheme);
+
+themeToggle.addEventListener("click", () => {
+  const current = document.documentElement.getAttribute("data-theme");
+  applyTheme(current === "dark" ? "light" : "dark");
+});
 
 let offset = 0;
 let totalCount = 0;
