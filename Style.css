@@ -131,7 +131,7 @@ body {
 .card {
   position: relative;
   overflow: hidden;
-  color: #fff;
+  color: #ffffff;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
   border-radius: 18px;
   padding: 16px;
@@ -146,19 +146,7 @@ body {
   animation: pop 0.35s ease both;
 }
 
-/* soft circle layered behind the Pokémon image */
-.card::before {
-  content: "";
-  position: absolute;
-  top: 12px;
-  left: 50%;
-  width: 146px;
-  height: 146px;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.25);
-  z-index: 0;
-}
+
 
 .card > * {
   position: relative;
@@ -278,7 +266,7 @@ body {
   }
 }
 
-/* card button sits nicely on the colored back */
+
 .card .info-btn {
   background: #fff;
   color: #23263a;

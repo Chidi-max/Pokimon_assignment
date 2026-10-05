@@ -2,10 +2,10 @@ const PAGE_SIZE = 20;
 const API = "https://pokeapi.co/api/v2/pokemon";
 
 const TYPE_COLORS = {
-  normal: "#a8a77a", fire: "#ee8130", water: "#6390f0", electric: "#f7d02c",
-  grass: "#7ac74c", ice: "#96d9d6", fighting: "#c22e28", poison: "#a33ea1",
+  normal: "#a8a77a", fire: "#ee3030", water: "#6390f0", electric: "#f7d02c",
+  grass: "#7ac74c", ice: "#96d9d6", fighting: "#c28228", poison: "#a33ea1",
   ground: "#e2bf65", flying: "#a98ff3", psychic: "#f95587", bug: "#a6b91a",
-  rock: "#b6a136", ghost: "#735797", dragon: "#6f35fc", dark: "#705746",
+  rock: "#b6a136", ghost: "#fdfdfd", dragon: "#6f35fc", dark: "#705746",
   steel: "#b7b7ce", fairy: "#d685ad"
 };
 
@@ -17,7 +17,7 @@ const nextBtn = document.getElementById("next");
 const pageInfo = document.getElementById("page-info");
 const themeToggle = document.getElementById("theme-toggle");
 
-// Theme: dark by default, remember the choice
+
 function applyTheme(theme) {
   document.documentElement.setAttribute("data-theme", theme);
   themeToggle.setAttribute("aria-checked", theme === "dark");
@@ -39,15 +39,15 @@ themeToggle.addEventListener("click", () => {
 
 let offset = 0;
 let totalCount = 0;
-let loaded = [];        // details of the Pokémon on the current page
-let allPokemon = [];    // every Pokémon name and url, fetched once
+let loaded = [];       
+let allPokemon = [];   
 const detailsCache = new Map();
 let searchToken = 0;
 let searchTimer;
 
 const pager = document.querySelector(".pager");
 
-// Fetch the full name list once so search works across every page
+
 const allPokemonPromise = fetch(`${API}?limit=100000&offset=0`)
   .then((res) => res.json())
   .then((data) => {
@@ -157,7 +157,7 @@ async function runSearch() {
   const term = searchInput.value.trim().toLowerCase();
   const token = ++searchToken;
 
-  // Empty search: go back to the normal page view
+
   if (term === "") {
     pager.style.display = "";
     render(loaded);
@@ -192,7 +192,7 @@ async function runSearch() {
   }
 }
 
-// Filter the name list already loaded, wait a moment after typing stops
+
 searchInput.addEventListener("input", () => {
   clearTimeout(searchTimer);
   searchTimer = setTimeout(runSearch, 250);
