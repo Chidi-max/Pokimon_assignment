@@ -39,7 +39,30 @@ themeToggle.addEventListener("click", () => {
 
 let offset = 0;
 let totalCount = 0;
-let loaded = []; // details of the Pokémon on the current page
+let loaded = [];        // details of the Pokémon on the current page
+let allPokemon = [];    // every Pokémon name and url, fetched once
+const detailsCache = new Map();
+let searchToken = 0;
+let searchTimer;
+
+const pager = document.querySelector(".pager");
+
+// Fetch the full name list once so search works across every page
+const allPokemonPromise = fetch(`${API}?limit=100000&offset=0`)
+  .then((res) => res.json())
+  .then((data) => {
+    allPokemon = data.results;
+  })
+  .catch((err) => console.error(err));
+
+async function getDetails(url) {
+  if (detailsCache.has(url)) return detailsCache.get(url);
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("Detail request failed");
+  const data = await res.json();
+  detailsCache.set(url, data);
+  return data;
+}
 
 async function loadPage() {
   statusEl.textContent = "Loading Pokémon...";
@@ -53,13 +76,7 @@ async function loadPage() {
     const listData = await listRes.json();
     totalCount = listData.count;
 
-    loaded = await Promise.all(
-      listData.results.map(async (item) => {
-        const res = await fetch(item.url);
-        if (!res.ok) throw new Error("Detail request failed");
-        return res.json();
-      })
-    );
+    loaded = await Promise.all(listData.results.map((item) => getDetails(item.url)));
 
     searchInput.value = "";
     render(loaded);
@@ -136,11 +153,49 @@ function createCard(p) {
   return card;
 }
 
-// Search filters the data already loaded, no API call per keystroke
-searchInput.addEventListener("input", () => {
+async function runSearch() {
   const term = searchInput.value.trim().toLowerCase();
-  const filtered = loaded.filter((p) => p.name.includes(term));
-  render(filtered);
+  const token = ++searchToken;
+
+  // Empty search: go back to the normal page view
+  if (term === "") {
+    pager.style.display = "";
+    render(loaded);
+    return;
+  }
+
+  pager.style.display = "none";
+  statusEl.textContent = "Searching...";
+
+  await allPokemonPromise;
+  if (token !== searchToken) return;
+
+  const matches = allPokemon.filter((p) => p.name.includes(term));
+  const shown = matches.slice(0, PAGE_SIZE);
+
+  if (shown.length === 0) {
+    grid.innerHTML = "";
+    statusEl.textContent = "No Pokémon found.";
+    return;
+  }
+
+  try {
+    const results = await Promise.all(shown.map((p) => getDetails(p.url)));
+    if (token !== searchToken) return;
+    render(results);
+    if (matches.length > PAGE_SIZE) {
+      statusEl.textContent = `Showing the first ${PAGE_SIZE} of ${matches.length} matches. Type more to narrow it down.`;
+    }
+  } catch (err) {
+    statusEl.textContent = "Oops, something went wrong. Please try again.";
+    console.error(err);
+  }
+}
+
+// Filter the name list already loaded, wait a moment after typing stops
+searchInput.addEventListener("input", () => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(runSearch, 250);
 });
 
 nextBtn.addEventListener("click", () => {
